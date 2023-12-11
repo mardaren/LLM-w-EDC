@@ -36,6 +36,6 @@ class DataHolder:
         return text_train, y_train, text_test, y_test
 
     def get_embeddings(self, text: np.array):
-        encoded_input = self.tokenizer(text, return_tensors='pt')
+        encoded_input = self.tokenizer(text.tolist(), return_tensors='pt', padding=True, truncation=True)
         output = self.model(**encoded_input)
         return output

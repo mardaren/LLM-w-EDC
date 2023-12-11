@@ -1,7 +1,3 @@
+from data_processing import DataHolder
 
-
-
-text = "Replace me by any text you'd like."
-
-
-print()
+data_holder = DataHolder("data/ag_news.csv")

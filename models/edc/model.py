@@ -2,11 +2,11 @@ import numpy as np
 import torch
 from torch import optim
 
-from edc.mlp import MLP
-from edc.loss import EDCLoss
+from models.mlp import MLP
+from models.edc import EDCLoss
 
 
-class Model:
+class EDCModel:
 
     def __init__(self, model_shape, lr):
         self.k = model_shape[-1]
@@ -49,34 +49,3 @@ class Model:
         y_test_cat = np.argmax(y_test.detach().numpy(), axis=1)
         accuracy = sum(y_pred == y_test_cat) / x_test.shape[0]
         print(f"Accuracy: {accuracy}")
-
-
-# class CNNModel(Model):
-#
-#     def __init__(self, k, lr):
-#         self.mlp = CNN()
-#         self.criterion = EDCLoss(k=k)
-#         self.optimizer = optim.Adam(self.mlp.parameters(), lr=lr)
-#
-#     def train(self, x_train, y_train, num_epochs=1000):
-#         # Set the model in training mode
-#         self.mlp.train()
-#
-#         for epoch in range(num_epochs):
-#             total_loss = 0
-#
-#             # Forward pass
-#             outputs = self.mlp(x_train)
-#
-#             # Compute the loss
-#             loss = self.criterion(outputs, y_train, epoch)
-#             total_loss += loss
-#
-#             # Backward pass and optimization
-#             self.optimizer.zero_grad()  # Clear gradients
-#             loss.backward()  # Backpropagation
-#             self.optimizer.step()  # Update weights
-#
-#             # Print training statistics
-#             if (epoch + 1) % 10 == 0:
-#                 print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {total_loss:.4f}')

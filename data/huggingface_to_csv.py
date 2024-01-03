@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from datasets import load_dataset
 
-# # Clickbait-NotClickbait
+# Clickbait-NotClickbait
 # dataset = load_dataset('christinacdl/clickbait_notclickbait_dataset')
 # data_train = pd.DataFrame(dataset["train"])
 # data_validation = pd.DataFrame(dataset["validation"])

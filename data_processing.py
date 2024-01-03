@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import pickle
+import torch
 from transformers import BertTokenizer, BertModel
 
 
@@ -16,8 +18,11 @@ class DataHolder:
         # We can add preprocessing **********************************************************************
 
         # Embedding selection
-        self.x_train = self.get_embeddings(text=text_train)
-        self.x_test = self.get_embeddings(text=text_test)
+
+        for text in text_train:
+            self.x_train = self.get_embeddings(text=text)
+        for text in text_test:
+            self.x_test = self.get_embeddings(text=text)
 
         # Maybe we can change it to dataset
 
@@ -35,7 +40,13 @@ class DataHolder:
 
         return text_train, y_train, text_test, y_test
 
+
+
     def get_embeddings(self, text: np.array):
-        encoded_input = self.tokenizer(text.tolist(), return_tensors='pt', padding=True, truncation=True)
+        encoded_input = self.tokenizer(text, return_tensors='pt', padding=True, truncation=True)
         output = self.model(**encoded_input)
-        return output
+        del encoded_input
+        # output.numpy()
+        result = torch.mean(output.last_hidden_state.real, dim=1).detach().numpy()
+        del output
+        return result

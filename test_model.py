@@ -4,8 +4,11 @@ import torch
 
 from models import EDCModel, BinaryNNClassifier, CategoricalNNClassifier
 from test.plot import plot_colormap
+import pickle
 
-
+file = open("ag_news_x_train.pkl", 'rb')
+data = pickle.load(file)
+exit(1)
 df = pd.read_csv("data/basic/train.csv")
 
 y_train = pd.get_dummies(df.pop('y')).values

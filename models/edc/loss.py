@@ -27,7 +27,7 @@ class EDCLoss(nn.Module):
         kl_div_p1 = torch.lgamma(sum_alpha_hat) - torch.log(self.k) - torch.sum(torch.lgamma(alpha_hat), dim=1).reshape(-1, 1)
         kl_div_p2 = torch.sum((alpha_hat - 1) * (torch.digamma(alpha_hat) - torch.digamma(sum_alpha_hat)), dim=1).reshape(-1, 1)
 
-        ranges = torch.tensor([1.0, t/10])
+        ranges = torch.tensor([1.0, t/100])
         lambda_t = torch.min(ranges)
 
         return torch.sum(samp_error) + lambda_t * torch.sum((kl_div_p1 + kl_div_p2))

@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 
 from models.mlp import MLP
 from models.uncertainty_quantificaiton import ClassificationUncertainty, ClassificationEntropy, ClassificationMargin
-
+from sklearn.metrics import f1_score
 
 class BaseModel:
 
@@ -33,7 +33,7 @@ class BaseModel:
                 outputs = self.mlp(x_train)
 
                 # Compute the loss
-                loss = self.criterion(outputs, y_train)
+                loss = self.get_criterion(outputs, y_train, epoch)
                 losses.append(loss.item())
 
                 # Backward pass and optimization
@@ -45,12 +45,17 @@ class BaseModel:
             # if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {sum(losses)/len(losses):.4f}')
 
+    def get_criterion(self, outputs, y_train, epoch):
+        return self.criterion(outputs, y_train)
+
     def test(self, x_test, y_test):
         self.mlp.eval()
         y_pred, _, u = self.get_predictions(x_test)
         y_test_cat = np.argmax(y_test.detach().numpy(), axis=1)
         accuracy = sum(y_pred == y_test_cat) / x_test.shape[0]
+        f1 = f1_score(y_test_cat, y_pred, average='weighted')
         print(f"Accuracy: {accuracy}")
+        print(f"F1 Score: {f1}")
 
 
 class BinaryNNClassifier(BaseModel):

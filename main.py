@@ -3,7 +3,7 @@ from models.standard_nn_classifiers import CategoricalNNClassifier
 from models.edc.model import EDCModel
 
 
-dh = DataHolder(target="ag_news_original")
+dh = DataHolder(target="ag_news_stemmed")
 # model = CategoricalNNClassifier(model_shape=(768, 256, 64, 4), batch_size=128, lr=1e-3)
 #
 # model.train(dh.ds_train)

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import torch
+from torch.utils.data import Dataset
 from transformers import BertTokenizer, BertModel
 
 
@@ -39,20 +40,48 @@ class DataConverter:
 
 class DataHolder:  # Will be fixed ****************************************************************************
 
-    def __init__(self, dir_data):
+    def __init__(self, target):
         self.test_percentage = 0.3
-        text_train, self.y_train, text_test, self.y_test = self.get_dataset(dir_data=dir_data)
+        # text_train, self.y_train, text_test, self.y_test = self.get_dataset(dir_data=dir_data)
+        texts, embeddings, labels, train_idx, test_idx = self.get_dataset(target=target)
 
-    def get_dataset(self, dir_data: str):
-        df = pd.read_csv(dir_data)
+        # self.text_train = texts[train_idx]
+        # self.text_test = texts[test_idx]
+        # self.x_train = embeddings[train_idx]
+        # self.x_test = embeddings[test_idx]
+        # self.y_train = labels[train_idx]
+        # self.y_test = labels[test_idx]
 
-        # Stratification may be needed here ***********************************************************
-        df_test = df.sample(frac=self.test_percentage)
-        df_train = df.drop(df_test.index)
+        self.ds_train = NLPDataset(texts[train_idx], embeddings[train_idx], labels[train_idx])
+        self.ds_test = NLPDataset(texts[test_idx], embeddings[test_idx], labels[test_idx])
 
-        text_train = df_train["text"].values
-        y_train = df_train["label"].values
-        text_test = df_test["text"].values
-        y_test = df_test["label"].values
+    def get_dataset(self, target: str):
+        df = pd.read_csv(f"data/raw/{target}.csv")
+        data = np.load(f"data/embeddings/{target}.npy")
 
-        return text_train, y_train, text_test, y_test
+        # train-test indices split
+        test_idx = df.sample(frac=self.test_percentage).index
+        train_idx = df.drop(test_idx).index
+
+        # labels = data[:, 0].reshape(-1, 1)
+        labels = pd.get_dummies(df['label']).values
+        embeddings = data[:, 1:]
+        texts = df['text']
+        del df, data
+
+        return texts, embeddings, labels, train_idx, test_idx
+
+
+class NLPDataset(Dataset):
+    """Face Landmarks dataset."""
+
+    def __init__(self, text_data, x_data, y_data, transform=None):
+        self.text_data = text_data
+        self.x_data = torch.tensor(x_data, dtype=torch.float32)
+        self.y_data = torch.tensor(y_data, dtype=torch.float32)
+
+    def __len__(self):
+        return self.text_data.shape[0]
+
+    def __getitem__(self, idx):
+        return self.x_data[idx], self.y_data[idx]

@@ -10,11 +10,11 @@ from utils import *
 dh = DataHolder(target="clickbait_notclickbait_original")
 
 # Standard Model
-# model = CategoricalNNClassifier(model_shape=(768, 256, 64, 4), batch_size=128, lr=1e-3)
+# model = CategoricalNNClassifier(model_shape=(768, 256, 64, 4), batch_size=256, lr=1e-3)
 # model.train(dh.ds_train)
 
 # Edc Model
-model = EDCModel(model_shape=(768, 256, 128, 64, 2), batch_size=128, lr=5e-4)
+model = EDCModel(model_shape=(768, 256, 128, 64, 2), batch_size=256, lr=5e-4)
 model.train(dh.ds_train, num_epochs=500)
 
 # Testing Phase ---------------------------------------------------------------------------

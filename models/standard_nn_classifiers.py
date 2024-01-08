@@ -68,11 +68,12 @@ class BinaryNNClassifier(BaseModel):
         self.quantifier = ClassificationEntropy()
 
     def get_predictions(self, x_data):
-        y_proba = self.mlp(x_data)
-        y_proba = torch.cat([1 - y_proba, y_proba], dim=1)
-        y_pred = torch.argmax(y_proba, dim=1)
+        self.mlp.eval()
+        y_proba = self.mlp(x_data).detach().numpy()
+        y_proba = np.concatenate([1 - y_proba, y_proba], axis=1)
+        y_pred = np.argmax(y_proba, axis=1)
         u = self.quantifier(y_proba)
-        return y_pred.detach().numpy(), y_proba.detach().numpy(), u.detach().numpy()
+        return y_pred, y_proba, u
 
 
 class CategoricalNNClassifier(BaseModel):
@@ -85,8 +86,8 @@ class CategoricalNNClassifier(BaseModel):
         self.quantifier = ClassificationEntropy()
 
     def get_predictions(self, x_data):
-        y_proba = self.mlp(x_data)
-        # y_proba = torch.cat([1 - y_proba, y_proba], dim=1)
-        y_pred = torch.argmax(y_proba, dim=1)
+        self.mlp.eval()
+        y_proba = self.mlp(x_data).detach().numpy()
+        y_pred = np.argmax(y_proba, axis=1)
         u = self.quantifier(y_proba)
-        return y_pred.detach().numpy(), y_proba.detach().numpy(), u.detach().numpy()
+        return y_pred, y_proba, u

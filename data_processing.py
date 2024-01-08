@@ -42,15 +42,7 @@ class DataHolder:  # Will be fixed *********************************************
 
     def __init__(self, target):
         self.test_percentage = 0.3
-        # text_train, self.y_train, text_test, self.y_test = self.get_dataset(dir_data=dir_data)
         texts, embeddings, labels, train_idx, test_idx = self.get_dataset(target=target)
-
-        # self.text_train = texts[train_idx]
-        # self.text_test = texts[test_idx]
-        # self.x_train = embeddings[train_idx]
-        # self.x_test = embeddings[test_idx]
-        # self.y_train = labels[train_idx]
-        # self.y_test = labels[test_idx]
 
         self.ds_train = NLPDataset(texts[train_idx], embeddings[train_idx], labels[train_idx])
         self.ds_test = NLPDataset(texts[test_idx], embeddings[test_idx], labels[test_idx])
@@ -66,7 +58,7 @@ class DataHolder:  # Will be fixed *********************************************
         # labels = data[:, 0].reshape(-1, 1)
         labels = pd.get_dummies(df['label']).values
         embeddings = data[:, 1:]
-        texts = df['text']
+        texts = df['text'].values
         del df, data
 
         return texts, embeddings, labels, train_idx, test_idx

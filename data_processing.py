@@ -29,8 +29,6 @@ class DataConverter:
             encoded_input = self.tokenizer(batch_text, return_tensors='pt', padding='max_length', truncation=True,
                                            max_length=128).to(self.device)
             output = self.model(**encoded_input)
-            # output = output.last_hidden_state.real.detach().cpu().numpy()
-            # result = np.mean(output, axis=1)
             result = torch.mean(output.last_hidden_state.real, dim=1).detach().cpu().numpy()
             results.append(result)
             del encoded_input, output
@@ -38,7 +36,7 @@ class DataConverter:
         return np.concatenate(results, axis=0)
 
 
-class DataHolder:  # Will be fixed ****************************************************************************
+class DataHolder:
 
     def __init__(self, target):
         self.test_percentage = 0.3
@@ -52,10 +50,9 @@ class DataHolder:  # Will be fixed *********************************************
         data = np.load(f"data/embeddings/{target}.npy")
 
         # train-test indices split
-        test_idx = df.sample(frac=self.test_percentage).index
+        test_idx = df.groupby('label').sample(frac=self.test_percentage).index
         train_idx = df.drop(test_idx).index
 
-        # labels = data[:, 0].reshape(-1, 1)
         labels = pd.get_dummies(df['label']).values
         embeddings = data[:, 1:]
         texts = df['text'].values
@@ -65,7 +62,6 @@ class DataHolder:  # Will be fixed *********************************************
 
 
 class NLPDataset(Dataset):
-    """Face Landmarks dataset."""
 
     def __init__(self, text_data, x_data, y_data, transform=None):
         self.text_data = text_data

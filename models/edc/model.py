@@ -27,30 +27,3 @@ class EDCModel(BaseModel):
 
     def get_criterion(self, outputs, y_train, epoch=None):
         return self.criterion(outputs, y_train, epoch)
-
-    # def train(self, x_train, y_train, num_epochs=1000):
-    #     # Set the model in training mode
-    #     self.mlp.train()
-    #
-    #     for epoch in range(num_epochs):
-    #         # Forward pass
-    #         outputs = self.mlp(x_train)
-    #
-    #         # Compute the loss
-    #         loss = self.criterion(outputs, y_train, epoch)
-    #
-    #         # Backward pass and optimization
-    #         self.optimizer.zero_grad()  # Clear gradients
-    #         loss.backward()  # Backpropagation
-    #         self.optimizer.step()  # Update weights
-    #
-    #         # Print training statistics
-    #         if (epoch + 1) % 10 == 0:
-    #             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
-
-    # def test(self, x_test, y_test):
-    #     self.mlp.eval()
-    #     y_pred, y_proba, u = self.get_predictions(x_test)
-    #     y_test_cat = np.argmax(y_test.detach().numpy(), axis=1)
-    #     accuracy = sum(y_pred == y_test_cat) / x_test.shape[0]
-    #     print(f"Accuracy: {accuracy}")

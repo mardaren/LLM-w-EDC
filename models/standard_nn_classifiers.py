@@ -1,11 +1,11 @@
 import numpy as np
-import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models.mlp import MLP
 from models.uncertainty_quantificaiton import ClassificationUncertainty, ClassificationEntropy, ClassificationMargin
 from sklearn.metrics import f1_score
+
 
 class BaseModel:
 
@@ -42,7 +42,6 @@ class BaseModel:
                 self.optimizer.step()  # Update weights
 
             # Print training statistics
-            # if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {sum(losses)/len(losses):.4f}')
 
     def get_criterion(self, outputs, y_train, epoch):

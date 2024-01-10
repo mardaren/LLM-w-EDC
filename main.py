@@ -7,15 +7,15 @@ from utils import *
 
 
 # Read the data
-dh = DataHolder(target="clickbait_notclickbait_original")
+dh = DataHolder(target="ag_news_original")
 
 # Standard Model
-# model = CategoricalNNClassifier(model_shape=(768, 256, 64, 2), batch_size=512, lr=1e-3)
+# model = CategoricalNNClassifier(model_shape=(768, 256, 64, 3), batch_size=512, lr=1e-3)
 # model.train(dh.ds_train, num_epochs=200)
 
 # Edc Model
-model = EDCModel(model_shape=(768, 256, 128, 64, 2), batch_size=512, lr=5e-4)
-model.train(dh.ds_train, num_epochs=200)
+model = EDCModel(model_shape=(768, 256, 128, 64, 4), batch_size=256, lr=5e-4)
+model.train(dh.ds_train, num_epochs=500)
 
 # Testing Phase ---------------------------------------------------------------------------
 # Train Data
@@ -29,8 +29,10 @@ model.test(dh.ds_test.x_data, dh.ds_test.y_data)
 y_pred, _, u = model.get_predictions(dh.ds_test.x_data)
 y_true = np.argmax(dh.ds_test.y_data.detach().numpy(), axis=1)
 likelihood = calculate_likelihood(y_true, y_pred, u)
+unc_suc = calculate_unc_success(y_true, y_pred, u)
 print("--------------------------------------------------------------")
 print(f"Likelihood: {likelihood}")
+print(f"Success of Uncertainty: {unc_suc}")
 
 sample, label = get_most_uncertain_sample(dh.ds_test.text_data, y_true, u)
 print("Most Uncertain Sample:")

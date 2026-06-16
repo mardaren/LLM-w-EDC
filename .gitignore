@@ -1,2 +1,3 @@
 .idea/
-data/embeddings/
+data/old/
+data/*.npy

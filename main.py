@@ -2,42 +2,42 @@ import numpy as np
 
 from data_processing import DataHolder
 from models.standard_nn_classifiers import CategoricalNNClassifier
-from models.edc.model import EDCModel
+from models.edc.layer import EDCModel
 from utils import *
 
+print('test')
+# # Read the data
+# dh = DataHolder(target="ag_news_original")
 
-# Read the data
-dh = DataHolder(target="ag_news_original")
+# # Standard Model
+# # model = CategoricalNNClassifier(model_shape=(768, 256, 64, 3), batch_size=512, lr=1e-3)
+# # model.train(dh.ds_train, num_epochs=200)
 
-# Standard Model
-# model = CategoricalNNClassifier(model_shape=(768, 256, 64, 3), batch_size=512, lr=1e-3)
-# model.train(dh.ds_train, num_epochs=200)
+# # Edc Model
+# model = EDCModel(model_shape=(768, 256, 128, 64, 4), batch_size=256, lr=5e-4)
+# model.train(dh.ds_train, num_epochs=500)
 
-# Edc Model
-model = EDCModel(model_shape=(768, 256, 128, 64, 4), batch_size=256, lr=5e-4)
-model.train(dh.ds_train, num_epochs=500)
+# # Testing Phase ---------------------------------------------------------------------------
+# # Train Data
+# print("Training Data:")
+# model.test(dh.ds_train.x_data, dh.ds_train.y_data)
+# # Test Data
+# print("Test Data:")
+# model.test(dh.ds_test.x_data, dh.ds_test.y_data)
 
-# Testing Phase ---------------------------------------------------------------------------
-# Train Data
-print("Training Data:")
-model.test(dh.ds_train.x_data, dh.ds_train.y_data)
-# Test Data
-print("Test Data:")
-model.test(dh.ds_test.x_data, dh.ds_test.y_data)
+# # Likelihood using uncertainty as a distribution
+# y_pred, _, u = model.get_predictions(dh.ds_test.x_data)
+# y_true = np.argmax(dh.ds_test.y_data.detach().numpy(), axis=1)
+# likelihood = calculate_likelihood(y_true, y_pred, u)
+# unc_suc = calculate_unc_success(y_true, y_pred, u)
+# print("--------------------------------------------------------------")
+# print(f"Likelihood: {likelihood}")
+# print(f"Success of Uncertainty: {unc_suc}")
 
-# Likelihood using uncertainty as a distribution
-y_pred, _, u = model.get_predictions(dh.ds_test.x_data)
-y_true = np.argmax(dh.ds_test.y_data.detach().numpy(), axis=1)
-likelihood = calculate_likelihood(y_true, y_pred, u)
-unc_suc = calculate_unc_success(y_true, y_pred, u)
-print("--------------------------------------------------------------")
-print(f"Likelihood: {likelihood}")
-print(f"Success of Uncertainty: {unc_suc}")
+# sample, label = get_most_uncertain_sample(dh.ds_test.text_data, y_true, u)
+# print("Most Uncertain Sample:")
+# print(f"\t\"{sample}\" -> Label: {label}")
 
-sample, label = get_most_uncertain_sample(dh.ds_test.text_data, y_true, u)
-print("Most Uncertain Sample:")
-print(f"\t\"{sample}\" -> Label: {label}")
-
-sample2, label2 = get_least_uncertain_sample(dh.ds_test.text_data, y_true, u)
-print("Least Uncertain Sample:")
-print(f"\t\"{sample2}\" -> Label: {label2}")
+# sample2, label2 = get_least_uncertain_sample(dh.ds_test.text_data, y_true, u)
+# print("Least Uncertain Sample:")
+# print(f"\t\"{sample2}\" -> Label: {label2}")

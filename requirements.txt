@@ -1,0 +1,7 @@
+torch>=2.11
+tokenizers>=0.20
+datasets>=3.0
+numpy
+tqdm
+matplotlib
+scikit-learn

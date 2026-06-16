@@ -3,7 +3,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models.mlp import MLP
-from models.uncertainty_quantificaiton import ClassificationUncertainty, ClassificationEntropy, ClassificationMargin
+from models.uncertainty_quantification import ClassificationUncertainty, ClassificationEntropy, ClassificationMargin
 from sklearn.metrics import f1_score
 
 

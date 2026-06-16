@@ -10,15 +10,34 @@ from models.llm import LLMBasic
 # Dataset: slices fixed-length windows from the tokenized corpus
 # ---------------------------------------------------------
 class TokenDataset(Dataset):
-    def __init__(self, data_path, context_length):
-        self.data = np.load(data_path)
+    # def __init__(self, data_path, context_length):
+    #     self.data = np.load(data_path)
+    #     self.context_length = context_length
+
+    # def __len__(self):
+    #     return len(self.data) - self.context_length
+
+    # def __getitem__(self, idx):
+    #     chunk = self.data[idx : idx + self.context_length + 1]
+    #     x = torch.from_numpy(chunk[:-1].astype(np.int64))
+    #     y = torch.from_numpy(chunk[1:].astype(np.int64))
+    #     return x, y
+    
+    # class TokenDataset(Dataset):
+    def __init__(self, data_path, context_length, stride=None, max_tokens=None):
+        data = np.load(data_path)
+        if max_tokens is not None:
+            data = data[:max_tokens]
+        self.data = data
         self.context_length = context_length
+        self.stride = stride if stride is not None else context_length
 
     def __len__(self):
-        return len(self.data) - self.context_length
+        return (len(self.data) - self.context_length) // self.stride
 
     def __getitem__(self, idx):
-        chunk = self.data[idx : idx + self.context_length + 1]
+        start = idx * self.stride
+        chunk = self.data[start : start + self.context_length + 1]
         x = torch.from_numpy(chunk[:-1].astype(np.int64))
         y = torch.from_numpy(chunk[1:].astype(np.int64))
         return x, y
@@ -99,3 +118,44 @@ for epoch in range(EPOCHS):
     torch.save(model.state_dict(), f"checkpoint_epoch{epoch}.pt")
 
 print("Done.")
+
+# import time
+
+# model.train()
+# x, y = next(iter(train_loader))
+# x, y = x.to(device), y.to(device)
+
+# # warm up first (first MPS call compiles kernels, skews timing)
+# _ = model(x)
+# if device.type == "mps":
+#     torch.mps.synchronize()
+
+# # time forward only
+# start = time.time()
+# for _ in range(20):
+#     logits = model(x)
+# if device.type == "mps":
+#     torch.mps.synchronize()
+# print("forward only:", (time.time() - start) / 20)
+
+# # time forward + backward
+# start = time.time()
+# for _ in range(20):
+#     logits = model(x)
+#     loss = F.cross_entropy(logits.view(-1, VOCAB_SIZE), y.view(-1))
+#     loss.backward()
+# if device.type == "mps":
+#     torch.mps.synchronize()
+# print("forward + backward:", (time.time() - start) / 20)
+
+# # time forward + backward + optimizer step
+# start = time.time()
+# for _ in range(20):
+#     optimizer.zero_grad()
+#     logits = model(x)
+#     loss = F.cross_entropy(logits.view(-1, VOCAB_SIZE), y.view(-1))
+#     loss.backward()
+#     optimizer.step()
+# if device.type == "mps":
+#     torch.mps.synchronize()
+# print("full step:", (time.time() - start) / 20)

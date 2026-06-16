@@ -56,7 +56,7 @@ D_FF = 1024
 BATCH_SIZE = 32
 LR = 3e-4
 EPOCHS = 2
-EVAL_EVERY = 500  # steps
+EVAL_EVERY = 1000  # steps
 
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print("Using device:", device)

@@ -27,7 +27,7 @@ def text_iterator(split, batch_size=1000):
             yield text
 
 tokenizer.train_from_iterator(text_iterator(ds["train"]), trainer=trainer)
-tokenizer.save("tinystories_tokenizer.json")
+tokenizer.save("data/tinystories_tokenizer.json")
 
 eot_id = tokenizer.token_to_id("<|endoftext|>")
 

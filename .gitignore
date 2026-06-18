@@ -1,3 +1,6 @@
 .idea/
 data/old/
+models/old/
+old/
 data/*.npy
+__pycache__/

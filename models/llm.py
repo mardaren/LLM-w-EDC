@@ -20,21 +20,20 @@ class LLMBasic(nn.Module):
         
 
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward_features(self, x: torch.Tensor) -> torch.Tensor:
         seq_len = x.shape[1]
-
         tok = self.token_emb(x)
         positions = torch.arange(seq_len, device=x.device)
         pos = self.pos_emb(positions)
         x = tok + pos
-
         for block in self.blocks:
             x = block(x)
-
         x = self.ln_f(x)
-        x = self.lm_head(x)
+        return x  # (batch, seq_len, d_model)
 
-        return x
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.forward_features(x)
+        return self.lm_head(x)
 
 
 class CausalSelfAttention(nn.Module):

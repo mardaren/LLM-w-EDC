@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from models import LLMBasic, EDCLoss, LLMwEDC
+from data.dataset import EmotionDataset
 
 # ---------------------------------------------------------
 # Config
@@ -16,7 +17,7 @@ N_LAYERS = 4
 D_FF = 1024
 
 HIDDEN_DIM = 128
-NUM_CLASSES = ...        # set this to your dataset's number of classes
+NUM_CLASSES = 6  # set this to your dataset's number of classes
 
 BATCH_SIZE = 32
 LR = 1e-4
@@ -36,7 +37,7 @@ model = LLMwEDC(backbone, d_model=D_MODEL, hidden_dim=HIDDEN_DIM,
                  num_classes=NUM_CLASSES).to(device)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
-criterion = EDCLoss(k=NUM_CLASSES, annealing_epochs=ANNEALING_EPOCHS)
+criterion = EDCLoss(k=NUM_CLASSES, annealing_epochs=ANNEALING_EPOCHS).to(device)
 
 # ---------------------------------------------------------
 # Data — plug in your classification Dataset/DataLoader here.
@@ -45,6 +46,9 @@ criterion = EDCLoss(k=NUM_CLASSES, annealing_epochs=ANNEALING_EPOCHS)
 #   lengths (batch,)           true length of each sequence, for pooling
 #   y       (batch,)           integer class labels
 # ---------------------------------------------------------
+train_dataset = EmotionDataset("train")
+val_dataset = EmotionDataset("val")
+
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 

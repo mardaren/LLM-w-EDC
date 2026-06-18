@@ -6,8 +6,8 @@ class EDCLoss(nn.Module):
 
     def __init__(self, k, annealing_epochs=10):
         super().__init__()
-        self.k = torch.tensor(k, dtype=torch.float32)      # düzeltme 1: float32
-        self.annealing_epochs = annealing_epochs            # düzeltme 3: sabit yerine parametre
+        self.register_buffer("k", torch.tensor(float(k)))
+        self.annealing_epochs = annealing_epochs
 
     def forward(self, e_values, y_true, t):
 

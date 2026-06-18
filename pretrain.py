@@ -64,8 +64,8 @@ print("Using device:", device)
 # ---------------------------------------------------------
 # Data
 # ---------------------------------------------------------
-train_ds = TokenDataset("data/train.npy", CONTEXT_LENGTH)
-val_ds = TokenDataset("data/val.npy", CONTEXT_LENGTH)
+train_ds = TokenDataset("data/pretrain/train.npy", CONTEXT_LENGTH)
+val_ds = TokenDataset("data/pretrain/val.npy", CONTEXT_LENGTH)
 
 train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
 val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False)

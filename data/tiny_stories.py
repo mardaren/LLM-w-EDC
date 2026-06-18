@@ -52,8 +52,8 @@ token_val = tokenize_split(ds["validation"])
 tr_data = np.array(token_train, dtype=np.uint16)
 val_data = np.array(token_val, dtype=np.uint16)
 
-np.save("train.npy", tr_data)
-np.save("val.npy", val_data)
+np.save("data/pretrain/train.npy", tr_data)
+np.save("data/pretrain/val.npy", val_data)
 
 print(ds)
 print("train tokens:", len(tr_data))

@@ -1,5 +1,5 @@
-from llm import LLMBasic
-from edc.layer import EDCLayer, EDCLoss
+from models.llm import LLMBasic
+from models.edc.layer import EDCLayer, EDCLoss
 
 import torch
 from torch import nn

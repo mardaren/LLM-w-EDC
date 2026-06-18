@@ -1,6 +1,8 @@
 .idea/
-data/old/
-models/old/
+.vscode/
 old/
 data/*.npy
-__pycache__/
+data/pretrain/
+data/old/
+models/old/
+**/__pycache__/
